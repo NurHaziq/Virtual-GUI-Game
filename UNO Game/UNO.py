@@ -31,4 +31,31 @@ def buildDeck():
 
     return deck
 
+"""
+shuffle all card in deck
+"""
+
+"""
+assign player
+"""
+"""
+change player position
+"""
+
+"""
+giving card to all player
+"""
+
+"""
+open one card from deck to start the game 
+"""
+
+"""
+play according follow the rule
+
+"""
+
+"""
+make GUI
+"""
 unoDeck = buildDeck()
