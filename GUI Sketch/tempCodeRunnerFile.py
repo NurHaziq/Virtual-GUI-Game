@@ -1,2 +1,1 @@
-
-tPlyrVal = StringVa
+ text = 'PLAY', padx = 40, pady = 10, command = onClick, fg = 'WHITE', bg = "DODGERBLUE",
