@@ -50,15 +50,26 @@ def shuffleDeck(deck, shuffleTime):
         return deck
 
 """
+Initialize playar to play
+Parameters      ||  inPlayer --> user
+                ||  unoDeck  --> user
+Return values   ||  players  --> list
+"""
+def player(inPlayer, players, unoDeck):
+    for player in range(inPlayer):
+        players.append(drawnCards(5, unoDeck))
+    return players
+
+"""
 Draw card off the top of the deck
-Parameters      ||  cardNum     --> integer
+Parameters      ||  numCards    --> integer
 Return values   ||  drawnCard   --> list
 """
-def drawnCards(cardNum, unoDeck):
-    drawnCard = []
-    for x in range(cardNum):
-        drawnCard.append(unoDeck.pop(0))
-    return drawnCard
+def drawnCards(numCards, unoDeck):
+    cardDrawn = []
+    for x in range(numCards):
+        cardDrawn.append(unoDeck.pop(0))
+    return cardDrawn
 
 """
 Show card in player hand
