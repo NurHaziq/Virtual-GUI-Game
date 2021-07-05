@@ -7,9 +7,9 @@ wnd = Tk()
 #wnd.geometry("600x400")
 wnd.title('UNO')
 # file location for Haziq
-wnd.iconbitmap('D:/UR6523011/Sem 2/VGT123 Technology System Programming II/GitHub/Virtual-GUI-Game/GUI Sketch/image/uno_icon.ico')
+#wnd.iconbitmap('D:/UR6523011/Sem 2/VGT123 Technology System Programming II/GitHub/Virtual-GUI-Game/GUI Sketch/image/uno_icon.ico')
 # file location for Danish
-#wnd.iconbitmap('C:/gui/UNO_icon.ico')
+wnd.iconbitmap('C:/gui/UNO_icon.ico')
 detailFrame = Label(wnd, bg = "lavender")
 
 gameFrame = Label(wnd, bg = 'blue')
