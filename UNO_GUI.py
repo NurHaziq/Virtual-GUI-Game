@@ -9,9 +9,24 @@ window.title('UNO')
 window.resizable(width = False, height = False)
 window.iconbitmap('C:/gui/UNO_icon.ico')
 
+
+totalPlayer = None
+
+'''
+Naming for each individual player is stored in playerName
+Total card for each individual player is store in players
+'''
+playerName = ['', '', '', '']
+players = []
+
+playerNameEntry = []
+playerPassword = []
+playerPasswordEntry = []
+
 detailFrame1 = Label(window, bg = 'skyblue2')
 guideInfo = Label(window)
 view_rank = Label(window)
+
 
 def guideClicked():
     global guideInfo
@@ -74,7 +89,67 @@ def rankView():
 
     players.commit()
     players.close()
-    
+
+
+'''
+Button OKAY when it clicked
+*********************************************************
+Parameter       ||  totalPlayerEntry    --> Entry
+                ||  rangeLabelNote      --> Label
+                ||  buttonPlay          --> state
+                ||  okayButton          --> state
+*********************************************************
+Return value    ||  totalPlayer         --> integer
+'''
+def okayClick(totalPlayerEntry, rangeLabelNote, buttonPlay, okayButton):
+    global totalPlayer
+    try:
+        if int(totalPlayerEntry.get()) < 2 or int(totalPlayerEntry.get()) > 4:
+            rangeLabelNote.config(text = 'Invalid!', fg = 'red')
+            
+        else:
+            totalPlayer = int(totalPlayerEntry.get())
+
+            buttonPlay['state'] = NORMAL
+            totalPlayerEntry['state'] = DISABLED
+            okayButton['state'] = DISABLED
+            rangeLabelNote.config(text = 'OK!!', fg = 'green')
+
+            main_page_part_2()
+
+    except ValueError:
+        rangeLabelNote.config(text = 'Invalid!', fg = 'red')
+        
+'''
+Define the main page for Frame 2
+****************************************************
+parameter       || None
+****************************************************
+return Value    ||  detailFrame2    --> Label
+'''
+def main_page_part_2():
+    global detailFrame2
+    detailFrame2 = Label(window, bg = 'skyblue2')
+    detailFrame2.pack(fill = X)
+
+    for x in range(totalPlayer):
+        Label(detailFrame2, text = f'Player Name {x + 1}', bg = "skyblue2").grid(row = x, column = 0, pady = 5)
+        Label(detailFrame2, text = ':', bg = "skyblue2").grid(row = x, column = 1, pady = 5)
+
+        nameEntry = Entry(detailFrame2, width = 20)
+        nameEntry.grid(row = x, column = 2, pady = 5)
+        playerNameEntry.append(nameEntry)
+        playerName.append('')
+        
+        Label(detailFrame2, text = f'Password {x + 1}', bg = "skyblue2").grid(row = x, column = 3, pady = 5)
+        Label(detailFrame2, text = ':', bg = "skyblue2").grid(row = x, column = 4, pady = 5)
+
+        passwordEntry = Entry(detailFrame2, width = 20, show = "*")
+        passwordEntry.grid(row = x, column = 5, pady = 5)
+        playerPasswordEntry.append(passwordEntry)
+        playerPassword.append('')
+        
+
 '''
 Define main page for Frame 1
 **************************************
@@ -105,7 +180,7 @@ def main_page_part_1():
     rangeLabelNote = Label(detailFrame1, text = '', padx = 30, bg = "skyblue2")
     rangeLabelNote.grid(row = 1, column = 4)
 
-    okayButton = Button(detailFrame1, text = 'OK', padx = 5, pady = 3, fg = 'WHITE',  bg = "blue4")
+    okayButton = Button(detailFrame1, text = 'OK', padx = 5, pady = 3,command = lambda : okayClick(totalPlayerEntry, rangeLabelNote, buttonPlay, okayButton), fg = 'WHITE',  bg = "blue4")
     okayButton.grid(row = 2, column = 2, pady = 10)
 
     ruleButton = Button(detailFrame1, text = 'GUIDE', fg = 'WHITE',  bg = "blue4", command = guideClicked)
