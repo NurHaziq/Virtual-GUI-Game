@@ -272,6 +272,105 @@ def okayClick(totalPlayerEntry, rangeLabelNote, buttonPlay, okayButton):
         rangeLabelNote.config(text = 'Invalid!', fg = 'red')
 
 
+"""
+Check card in player hand to put in pile card during wild card
+***************************************************************
+Parameters      ||  None
+***************************************************************
+Return Value    ||  playerTurn      --> integer
+                ||  playerHand      --> Label
+                ||  totalPlayer     --> integer
+                ||  players         --> list
+                ||  PlayerCurrentCard   --> string
+                ||  playerPassCard      --> string
+                ||  gameFrame           --> Label
+"""
+def player_hand():
+    global  playerTurn, playerHand, totalPlayer, players, PlayerCurrentCard, playerPassCard, \
+            gameFrame, clicked, putCard
+
+    playerHand.destroy()
+
+    playerHand = Toplevel(window)
+    playerHand.title(f'In Your Hand Player {playerTurn + 1}')
+    playerHand.resizable(width = False, height = False)
+    window.iconbitmap('C:/gui/UNO_icon.ico')
+    
+
+    gameFrame.destroy()
+    main_page_part_3()
+
+    PlayerCurrentCard.clear()
+
+    """
+    Resize the image to specific dimension
+    ***************************************************************
+    Parameters      ||  location --> string
+    ***************************************************************
+    Return Value    ||  updated_card_pic    --> ImageTk.PhotoImage
+    """
+    def sizing_image(location):
+        # Open Card Image
+        open_pic = Image.open(f'{GUI_location}{card_image_location}/{location}.png')
+        # Resized the Image
+        resized = open_pic.resize((54, 84), Image.ANTIALIAS)
+        # Updated Card Image size
+        updated_card_pic = ImageTk.PhotoImage(resized)
+        return updated_card_pic
+
+    playerPassCard = sizing_image('Pass')
+
+    Label(playerHand, text = 'Your Card').grid(row = 0, column = 0, columnspan = len(players[playerTurn]))
+
+    if colorState == 1:
+
+        options = ['Choose Card'] + colors
+
+        clicked = StringVar()
+        clicked.set(options[0])
+
+        for x in range(len(colors)):
+            PlayerCurrentCard.append(sizing_image(colors[x]))
+
+            Label(playerHand, image = PlayerCurrentCard[x]).grid(row = 1, column = x, padx = 5)
+
+        dropDown = OptionMenu(playerHand,  clicked, *options)
+        dropDown.grid(row = 2, column = 0, columnspan = 4)
+
+        putCard = Button(playerHand, image = playerPassCard, borderwidth = 0)
+        putCard.grid(row = 3, column = 0, columnspan = 4)
+
+    else:
+        cardColumnLimit = 5
+        setCardRow = 1
+        setCardColumn = 0
+
+        options = ['Choose Card', 'Pass'] + players[playerTurn]
+
+        clicked = StringVar()
+        clicked.set(options[0])
+
+        card_pos = 0
+        for x in range(len(players[playerTurn])):
+            PlayerCurrentCard.append(sizing_image(players[playerTurn][x]))
+
+            # Change change row for card in player hand
+            if x >= cardColumnLimit:
+                cardColumnLimit += 5
+                setCardRow += 1
+                setCardColumn = 0
+
+            Label(playerHand, image = PlayerCurrentCard[x]).grid(row = setCardRow, column = setCardColumn, padx = 5)
+            
+            setCardColumn += 1
+        
+        dropDown = OptionMenu(playerHand,  clicked, *options, command = pick_card)
+        dropDown.grid(row = setCardRow + 1, column = 0, columnspan = 5)
+
+        putCard = Button(playerHand, image = playerPassCard, command = lambda: pass_card(players), borderwidth = 0)
+        putCard.grid(row = setCardRow + 2, column = 0, columnspan = 5)
+
+
 '''
 Define the main page for Frame 3
 ****************************************************
