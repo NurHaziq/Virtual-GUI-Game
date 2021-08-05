@@ -4,20 +4,30 @@ import sys
 import guideNote as GN
 import sqlite3
 from tkinter import messagebox
+from PIL import ImageTk, Image
 
 window = Tk()
 window.title('UNO')
 window.resizable(width = False, height = False)
-window.iconbitmap('C:/Users/user/Desktop/GitHub/Virtual-GUI-Game/GUI Sketch/image/uno_icon.ico')
 
 # Change it to the direction path in ur computer
-#GUI_location = 'D:/UR6523011/Sem 2/VGT123 Technology System Programming II/GUI/GUI_Sketch'
-#card_image_location = '/image/Uno Card'
+GUI_location = 'D:/UR6523011/Sem 2/VGT123 Technology System Programming II/GitHub/Virtual-GUI-Game'
+card_image_location = '/image/Uno Card'
+"""
 card_image_location = '/img/Uno Card'
 GUI_location = 'C:/Users/danis/OneDrive/Desktop/UNO_GUI'
+"""
+"""
+card_image_location = '/image/Uno Card'
+GUI_location = 'C:/Users/user/Desktop/GitHub/Virtual-GUI-Game'
+"""
 
-card_image_location = '/img/Uno Card'
-GUI_location = 'C:/Users/user/Desktop/GitHub/Virtual-GUI-Game/GUI Sketch/image'
+window.iconbitmap(f'{GUI_location}/GUI Sketch/image/uno_icon.ico')
+
+detailFrame1 = Label(window, bg = 'skyblue2')
+detailFrame2 = Label(window, bg = 'skyblue2')
+
+gameFrame = Label(window,  bg = 'skyblue1')
 
 totalPlayer = None
 
@@ -32,12 +42,33 @@ playerNameEntry = []
 playerPassword = []
 playerPasswordEntry = []
 
+card_pic = []
+
+pile_card = []
+PlayerCurrentCard = []
+playerPassCard = None
+playerPutCard = []
+
+clicked = None
+putCard = None
+colorState = 0
+checkUpdated = 0
+victory = 0
+
+passwordWindow = Label(window)
+guideInfo = Label(window)
+playerHand = Label(window)
+view_rank = Label(window)
+
+playerTurn = 0
+playerDirection = 1
+
 unoDeck = UC.buildDeck()
 unoDeck = UC.shuffleDeck(unoDeck, 3)
 
-detailFrame1 = Label(window, bg = 'skyblue2')
-guideInfo = Label(window)
-view_rank = Label(window)
+colors = ['Red', 'Blue', 'Yellow', 'Green']
+currentCard = None
+holdWild = 0
 
 
 def guideClicked():
@@ -209,7 +240,6 @@ def playClick(buttonPlay):
         for x in range(totalPlayer):
             
             pile_card = UC.initializeCard(pile_card, unoDeck)
-        
 
 
 '''
@@ -240,7 +270,93 @@ def okayClick(totalPlayerEntry, rangeLabelNote, buttonPlay, okayButton):
 
     except ValueError:
         rangeLabelNote.config(text = 'Invalid!', fg = 'red')
-        
+
+
+'''
+Define the main page for Frame 3
+****************************************************
+parameter       || None
+****************************************************
+return Value    ||  gameFrame   --> Label
+                ||  unoDeck     --> list
+                ||  card_pic    --> list
+                ||  players     --> list
+                ||  pile_card   --> list
+'''
+def main_page_part_3():
+    global gameFrame, unoDeck, card_pic, players, pile_card, playerTurn, victory
+
+    gameFrame = Label(window,  bg = 'skyblue1')
+    gameFrame.pack(fill = X)
+
+    for x in range(8):
+       Grid.columnconfigure(gameFrame, x, weight = 1)
+    current_row = 0
+
+    """
+    Function to show your card and store in in card_pic
+    **************************************************
+    Parameter       ||  None
+    **************************************************
+    Return value    ||  card_pic    --> list
+    
+    """
+    def sizing_image():
+        global card_pic
+        card_pic.clear()
+        for x in range(totalPlayer):
+            # Open Card Image
+            #open_pic = Image.open(f'{GUI_location}{card_image_location}/uno backside.png')
+            open_pic = Image.open(f'{GUI_location}/img/Uno Card/uno backside.png')
+            # Resized the Image
+            resized = open_pic.resize((54, 84), Image.ANTIALIAS)
+            if x == 0:
+                # Open Card Image
+                open_pic_1 = Image.open(f'{GUI_location}{card_image_location}/{pile_card[-1]}.png')
+                # Resized the Image
+                resized_1 = open_pic_1.resize((54, 84), Image.ANTIALIAS)
+                # Updated Card Image size
+                updated_card_pic_1 = ImageTk.PhotoImage(resized_1)
+                card_pic.append(updated_card_pic_1)
+                updated_card_pic = ImageTk.PhotoImage(resized)              
+                card_pic.append(updated_card_pic)
+            # Rotate the image
+            resized = resized.rotate(angle = rotate[x], expand = True)
+            # Updated Card Image size
+            updated_card_pic = ImageTk.PhotoImage(resized)              
+            card_pic.append(updated_card_pic)
+            
+            if x == 0:
+                Label(gameFrame, image = card_pic[x], bg = 'skyblue1').grid(row = 2, column = 3, rowspan = 2, sticky = 'e')
+                Label(gameFrame, image = card_pic[x + 1], bg = 'skyblue1').grid(row = 2, column = 4, rowspan = 2, sticky = 'w')
+            Label(gameFrame, image = card_pic[x + 2], bg = 'skyblue1').grid(row = player_position[x][0], column = player_position[x][2], rowspan = 2, columnspan = 2, sticky = player_position[x][4])
+            Label(gameFrame,text = f'Player {x + 1}: {playerName[x]}', bg = 'skyblue1').grid(row = player_position[x][0], column = player_position[x][3], sticky = player_position[x][5])
+            Label(gameFrame,text = f'Total Card: {len(players[x])}',  bg = 'skyblue1').grid(row = player_position[x][1], column = player_position[x][3], sticky = player_position[x][6])
+
+    if totalPlayer > 2:
+        rotate = [180, 270, 90, 0]
+        player_position = [[0, 1, 3, 5, 'ew', 'ws', 'wn'],  [2, 3, 1, 0, 'w', 'es', 'en'], [2, 3, 5, 7, 'e', 'ws', 'wn'], [4, 5, 3, 5, 'ew', 'ws', 'wn']]
+    else:
+        rotate = [180, 0]
+        player_position = [[0, 1, 3, 5, 'ew', 'ws', 'wn'], [4, 5, 3, 5, 'ew', 'ws', 'wn']]
+    sizing_image()
+
+    if holdWild == 1:
+        Label(gameFrame, text = f'Player {playerTurn + 1} Turn\nCurrent Card : {pile_card[-1]}\nColor : {currentCard}', bg = 'skyblue1').grid(row = 0,  column = 0, columnspan = 2)
+    else:
+        Label(gameFrame, text = f'Player {playerTurn + 1} Turn\nCurrent Card : {pile_card[-1]}', bg = 'skyblue1').grid(row = 0,  column = 0, columnspan = 2)
+
+    quit_But = Button(gameFrame, text = "QUIT\nGAME", bg = "red", width = 8, height = 2, command = window.destroy)
+    quit_But.grid(row = 6, column = 0, sticky = W, padx = 10, pady = 10)
+
+    if victory == 1:
+        champion(window)
+        view_But = Button(gameFrame, text = "SHOW YOUR\nCARD", bg = "blue4",fg = 'white', width = 10, height = 2, command = login, state = DISABLED)
+    else:
+        view_But = Button(gameFrame, text = "SHOW YOUR\nCARD", bg = "blue4",fg = 'white', width = 10, height = 2, command = login)
+    view_But.grid(row = 6, column = 9, sticky = E, padx = 10, pady = 10)
+
+
 '''
 Define the main page for Frame 2
 ****************************************************
