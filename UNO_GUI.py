@@ -272,6 +272,121 @@ def okayClick(totalPlayerEntry, rangeLabelNote, buttonPlay, okayButton):
         rangeLabelNote.config(text = 'Invalid!', fg = 'red')
 
 
+def jump_page():
+    global gameFrame, playerHand
+    gameFrame.destroy()
+    playerHand.destroy()
+    main_page_part_3()
+
+def check_position():
+    global playerTurn
+    if playerTurn >= totalPlayer:
+        playerTurn = 0
+    elif playerTurn < 0:
+        playerTurn = totalPlayer - 1
+
+
+def pass_card(players):
+    global clicked, pile_card, playerTurn, playerDirection, colorState, currentCard, checkUpdated, holdWild, victory
+
+    if holdWild == 1:
+        
+        currentProgress =  UC.checkColor(clicked.get(), players[playerTurn], checkUpdated, pile_card, unoDeck, currentCard)
+        checkUpdated = currentProgress[0]
+        #holdWild = currentProgress[2]
+        victory = currentProgress[3]
+
+        if checkUpdated != 0:
+            #check_position()
+            if checkUpdated == 1:
+                # Pass
+                print('Pass is selected')
+                playerTurn += playerDirection
+            elif checkUpdated == 2:
+                # Wild Draw Four
+                print('Wild Draw Four is selected')
+                player_hand()
+            elif checkUpdated == 3:
+                # Wild
+                print('Wild is selected')
+                player_hand()
+            elif checkUpdated == 4:  
+                # Skip
+                print('Skip is selected')
+                playerTurn += playerDirection
+                check_position()
+                playerTurn += playerDirection
+            elif checkUpdated == 5:
+                # Reverse
+                print('Reverse is selected')
+                playerDirection *= -1
+                playerTurn += playerDirection
+            elif checkUpdated == 6:
+                # Draw Two
+                print('Draw Two is selected')
+                playerTurn += playerDirection
+                check_position()
+                players[playerTurn] += UC.drawnCards(unoDeck, 2)
+                playerTurn += playerDirection
+            elif checkUpdated == 7:
+                # Color or value are same
+                print('Color or value is selected')
+                playerTurn += playerDirection
+                checkUpdated = 0
+            holdWild = 0
+            check_position()
+            jump_page()
+
+    elif holdWild == 0:
+        currentProgress =  UC.checkCard(clicked.get(), players[playerTurn], checkUpdated, pile_card, unoDeck)
+        checkUpdated = currentProgress[0]
+        victory = currentProgress[2]
+
+        if checkUpdated != 0:
+            print("No card is selected")
+            if checkUpdated == 1:
+                # Pass
+                print('Pass is selected')
+                playerTurn += playerDirection
+            elif checkUpdated == 2:
+                # Wild Draw Four
+                print('Wild Draw Four is selected')
+                colorState = 1
+                holdWild = 1
+                player_hand()
+            elif checkUpdated == 3:
+                # Wild
+                print('Wild is selected')
+                colorState = 1
+                holdWild = 1
+                player_hand()
+            elif checkUpdated == 4:
+                # Skip
+                print('Skip is selected')
+                playerTurn += playerDirection
+                check_position()
+                playerTurn += playerDirection
+            elif checkUpdated == 5:
+                # Reverse
+                print('Reverse is selected')
+                playerDirection *= -1
+                playerTurn += playerDirection
+            elif checkUpdated == 6:
+                # Draw Two
+                print('Draw Two is selected')
+                playerTurn += playerDirection
+                check_position()
+                players[playerTurn] += UC.drawnCards(unoDeck, 2)
+                playerTurn += playerDirection
+            elif checkUpdated == 7:
+                # Color or value are same
+                print('Color or value is selected')
+                playerTurn += playerDirection
+            checkUpdated = 0
+            check_position()
+            jump_page()
+
+            
 """
 Check card in player hand to put in pile card during wild card
 ***************************************************************
@@ -364,7 +479,7 @@ def player_hand():
             
             setCardColumn += 1
         
-        dropDown = OptionMenu(playerHand,  clicked, *options, command = pick_card)
+        dropDown = OptionMenu(playerHand,  clicked, *options)
         dropDown.grid(row = setCardRow + 1, column = 0, columnspan = 5)
 
         putCard = Button(playerHand, image = playerPassCard, command = lambda: pass_card(players), borderwidth = 0)
