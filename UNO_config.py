@@ -125,8 +125,6 @@ def checkCard(currentCard, playerHand, updated, pileCard, unoDeck):
     if currentCard == 'Pass':
         playerHand.extend(drawnCards(unoDeck, 1))
         updated = 1
-    elif currentCard == 'Choose Card':
-        print('Are you idiot')
     else:
         if 'Wild' in currentCard:
             pileCard.append(playerHand.pop(playerHand.index(currentCard)))
@@ -179,8 +177,6 @@ def checkColor(currentCard, playerHand, updated, pileCard, unoDeck, cardColor):
     if currentCard == 'Pass':
         playerHand.extend(drawnCards(unoDeck, 1))
         updated = 1
-    elif currentCard == 'Choose Card':
-        print('Are you idiot')
     else:
         if splitCard[0] in cardColor:
             pileCard.append(playerHand.pop(playerHand.index(currentCard)))
