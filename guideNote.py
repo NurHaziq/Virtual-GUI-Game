@@ -1,13 +1,13 @@
 from tkinter import *
 from tkinter import ttk
 
-def rule(current, playerHand, GUI_location):
+def rule(current, playerHand):
     playerHand.destroy()
     
     playerHand = Toplevel(current)
     playerHand.title('UNO Guide')
     playerHand.resizable(width = False, height = False)
-    playerHand.iconbitmap(f'{GUI_location}/GUI Sketch/image/uno_icon.ico')
+    playerHand.iconbitmap('C:/gui/UNO_icon.ico')
     
     #Create another frame inside the canvas
     main_frame = Label(playerHand, bg = "skyblue2")

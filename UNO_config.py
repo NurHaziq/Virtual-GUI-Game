@@ -84,6 +84,23 @@ def showHand(player, playerHand):
         print(f'{y}) {card}')
     print('')
 
+"""
+Check whether a player is able to drawn a card
+***********************************************
+Parameters      ||  color       --> string
+                ||  value       --> string
+                ||  playerHand  --> list
+***********************************************
+Return Value    ||  boolean
+"""
+def canPlay(color, value, playerHand):
+    for card in playerHand:
+        if 'Wild' in card:
+            return True
+        elif color in card or value in card:
+            return True
+    return False
+
 
 """
 Check on pile cannot be special card for first
@@ -144,14 +161,15 @@ def checkCard(currentCard, playerHand, updated, pileCard, unoDeck):
             pileCard.append(playerHand.pop(playerHand.index(currentCard)))
             if len(playerHand) == 0:
                 winner = 1
-            if splitCard[1] == 'Skip':
-                updated = 4
-            elif splitCard[1] == 'Reverse':
-                updated = 5
-            elif splitCard[1] == 'Draw Two':
-                updated = 6
             else:
-                updated = 7
+                if splitCard[1] == 'Skip':
+                    updated = 4
+                elif splitCard[1] == 'Reverse':
+                    updated = 5
+                elif splitCard[1] == 'Draw Two':
+                    updated = 6
+                else:
+                    updated = 7
     return updated, checkSplitCard, winner
 
 
@@ -188,14 +206,15 @@ def checkColor(currentCard, playerHand, updated, pileCard, unoDeck, cardColor):
             pileCard.append(playerHand.pop(playerHand.index(currentCard)))
             if len(playerHand) == 0:
                 winner = 1
-            if splitCard[1] == 'Skip':
-                updated = 4
-            elif splitCard[1] == 'Reverse':
-                updated = 5
-            elif splitCard[1] == 'Draw Two':
-                updated = 6
             else:
-                updated = 7
+                if splitCard[1] == 'Skip':
+                    updated = 4
+                elif splitCard[1] == 'Reverse':
+                    updated = 5
+                elif splitCard[1] == 'Draw Two':
+                    updated = 6
+                else:
+                    updated = 7
                 Nabil = 0
     return updated, checkSplitCard, Nabil, winner
 
