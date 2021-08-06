@@ -2,7 +2,9 @@ import random
 
 """
 Genarate UNO deck for 108 cards.
+*************************************
 Parameter       ||  None
+*************************************
 Return value    ||  deck --> list
 """
 def buildDeck():
@@ -34,7 +36,9 @@ def buildDeck():
 
 """
 Shuffles the list of items
+**************************************
 Parameters      ||  deck --> list
+**************************************
 Return values   ||  deck --> list
 """
 def shuffleDeck(deck, shuffleTime):
@@ -50,22 +54,13 @@ def shuffleDeck(deck, shuffleTime):
         return deck
 
 """
-Initialize playar to play
-Parameters      ||  inPlayer --> user
-                ||  unoDeck  --> user
-Return values   ||  players  --> list
-"""
-def player(inPlayer, players, unoDeck):
-    for player in range(inPlayer):
-        players.append(drawnCards(5, unoDeck))
-    return players
-
-"""
 Draw card off the top of the deck
-Parameters      ||  numCards    --> integer
+***********************************************
+Parameters      ||  numCards     --> integer
+***********************************************
 Return values   ||  drawnCard   --> list
 """
-def drawnCards(numCards, unoDeck):
+def drawnCards(unoDeck, numCards):
     cardDrawn = []
     for x in range(numCards):
         cardDrawn.append(unoDeck.pop(0))
@@ -87,20 +82,26 @@ def showHand(player, playerHand):
         print(f'{y}) {card}')
     print('')
 
+
 """
-Check whether a player is able to drawn a card
-Parameters      ||  color       --> string
-                ||  value       --> string
-                ||  playerHand  --> list
-Return Value    ||  boolean
+Check on pile cannot be special card for first
+***********************************************
+Parameters      ||  pile_card   --> list
+                ||  unoDeck     --> list
+***********************************************
+Return Value    ||  pile_card   --> list
 """
-def canPlay(color, value, playerHand):
-    for card in playerHand:
-        if 'Wild' in card:
-            return True
-        elif color in card or value in card:
-            return True
-    return False
+def initializeCard(pileCard, unoDeck):
+    pileCard.append(unoDeck.pop(0))
+    splitCard = pileCard[-1].split(' ', 1)
+    currentColor = splitCard[0]
+
+    while splitCard[0] == 'Wild' or splitCard[1] == 'Skip' or splitCard[1] == 'Reverse' or splitCard[1] == 'Draw Two':
+        pileCard.append(unoDeck.pop(0))
+        splitCard = pileCard[-1].split(' ', 1)
+        currentColor = splitCard[0]
+
+    return pileCard
 
 
 """
