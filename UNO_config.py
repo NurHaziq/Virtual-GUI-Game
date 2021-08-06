@@ -150,3 +150,48 @@ def checkCard(currentCard, playerHand, updated, pileCard, unoDeck):
             else:
                 updated = 7
     return updated, checkSplitCard, winner
+
+
+"""
+Check card in player hand to put in pile card during wild card
+***************************************************************
+Parameters      ||  currentCard --> string
+                ||  playerHand  --> list
+                ||  updated     --> integer
+                ||  pileCard    --> list
+                ||  unoDeck     --> list
+                ||  cardColor   --> string
+***************************************************************
+Return Value    ||  updated         --> integer
+                ||  checkSplitCard  --> string
+                ||  Nabil           --> integer
+                ||  winner          --> integer
+"""
+def checkColor(currentCard, playerHand, updated, pileCard, unoDeck, cardColor):
+
+    Nabil = 1
+    updated = 0
+    winner = 0
+
+    splitCard = currentCard.split(' ', 1)
+    checkSplitCard = currentCard
+    if currentCard == 'Pass':
+        playerHand.extend(drawnCards(unoDeck, 1))
+        updated = 1
+    elif currentCard == 'Choose Card':
+        print('Are you idiot')
+    else:
+        if splitCard[0] in cardColor:
+            pileCard.append(playerHand.pop(playerHand.index(currentCard)))
+            if len(playerHand) == 0:
+                winner = 1
+            if splitCard[1] == 'Skip':
+                updated = 4
+            elif splitCard[1] == 'Reverse':
+                updated = 5
+            elif splitCard[1] == 'Draw Two':
+                updated = 6
+            else:
+                updated = 7
+                Nabil = 0
+    return updated, checkSplitCard, Nabil, winner
