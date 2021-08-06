@@ -11,18 +11,16 @@ window.title('UNO')
 window.resizable(width = False, height = False)
 
 # Change it to the direction path in ur computer
-"""GUI_location = 'D:/UR6523011/Sem 2/VGT123 Technology System Programming II/GitHub/Virtual-GUI-Game'
-card_image_location = '/image/Uno Card'"""
+#Haziq Github file location
+#GUI_location = 'D:/UR6523011/Sem 2/VGT123 Technology System Programming II/GitHub/Virtual-GUI-Game'
+#Danish Github file location
+GUI_location = 'C:/Users/danis/OneDrive/Desktop/VGT 123/GitHub/Virtual-GUI-Game'
+#Aiman Github file location
+#GUI_location = 'C:/Users/user/Desktop/GitHub/Virtual-GUI-Game'
 
-card_image_location = '/img/Uno Card'
-GUI_location = 'C:/Users/danis/OneDrive/Desktop/UNO_GUI'
-window.iconbitmap('C:/gui/UNO_icon.ico')
-"""
 card_image_location = '/image/Uno Card'
-GUI_location = 'C:/Users/user/Desktop/GitHub/Virtual-GUI-Game'
-"""
 
-#window.iconbitmap(f'{GUI_location}/GUI Sketch/image/uno_icon.ico')
+window.iconbitmap(f'{GUI_location}/GUI Sketch/image/uno_icon.ico')
 
 detailFrame1 = Label(window, bg = 'skyblue2')
 detailFrame2 = Label(window, bg = 'skyblue2')
@@ -43,6 +41,7 @@ playerPassword = []
 playerPasswordEntry = []
 
 card_pic = []
+winner_pic = []
 
 pile_card = []
 PlayerCurrentCard = []
@@ -132,6 +131,75 @@ def rankView():
 
     players.commit()
     players.close()
+    
+def champion (window):
+    root = Toplevel(window)
+    root.overrideredirect(1)
+    
+    #GUI_location = 'C:/Users/danis/OneDrive/Desktop/UNO_GUI'
+    #card_image_location = '/img'
+    winner_pic.clear()
+    
+    currentProgress = UC.winningPosition(playerName, players, totalPlayer)
+    name_pos_db = currentProgress[0]
+    card_pos_db = currentProgress[1]
+    
+    player = sqlite3.connect('winningPos.db')
+    c = player.cursor()
+    
+    if totalPlayer == 2:
+        for x in range(2):
+            name_pos_db.append('None')
+            card_pos_db.append([])
+    elif totalPlayer == 3:
+        name_pos_db.append('None')
+        card_pos_db.append([])
+        
+    c.execute("INSERT INTO winning VALUES (:first_place_name, :first_place_Totalcard, :second_place_name, :second_place_Totalcard, :third_place_name, :third_place_Totalcard, :fourth_place_name, :fourth_place_Totalcard)",
+            {
+                'first_place_name': name_pos_db [0],
+                'first_place_Totalcard': len(card_pos_db [0]),
+                'second_place_name': name_pos_db [1],
+                'second_place_Totalcard': len(card_pos_db [1]),
+                'third_place_name': name_pos_db [2],
+                'third_place_Totalcard': len(card_pos_db [2]),
+                'fourth_place_name': name_pos_db [3],
+                'fourth_place_Totalcard': len(card_pos_db [3])
+            })
+    player.commit()
+    player.close()
+
+    open_pic = Image.open(f'{GUI_location}/Image/crown.png')
+    resized = open_pic.resize((80, 60), Image.ANTIALIAS)
+    updated_card_pic = ImageTk.PhotoImage(resized)
+    winner_pic.append(updated_card_pic)
+
+    open_pic = Image.open(f'{GUI_location}/Image/trophy.png')
+    resized = open_pic.resize((150, 200), Image.ANTIALIAS)
+    updated_card_pic = ImageTk.PhotoImage(resized)
+    winner_pic.append(updated_card_pic)
+
+    fStframe = Frame(root, bg = "red4")
+    fStframe.pack()
+
+    blank = Label(fStframe, text = " ",bg = "red4")
+    blank.grid(padx = 5)
+
+    congratulation = Label(fStframe,text = 'CONGRATULATION !!',padx = 40, pady = 10, bg = "red4",fg = "white", font = "helvetica")
+    congratulation.grid(padx = 150)
+
+    winner = Label(fStframe, text = "THE WINNER IS", bg = "red4",fg = "white", font = "helvetica")
+    winner.grid(pady = 5)
+
+    Label(fStframe, image = winner_pic[0], bg = 'red4').grid(pady = 10,sticky = S)
+
+    name = Label(fStframe, text = f"Player Name : {name_pos_db[0]} ", bg = "red4",fg = "white", font = "helvetica")
+    name.grid(pady = 10)
+    
+    Label(fStframe, image = winner_pic[1], bg = 'red4').grid(pady = 5,sticky = S)
+    
+    participant = Label(fStframe, text = f"2nd Place Is Player\n {name_pos_db[1]}", bg = 'red4', fg = 'white', font = "helvetica")
+    participant.grid(padx = 50, pady = 10)
 
 
 '''
@@ -240,6 +308,9 @@ def playClick(buttonPlay):
         for x in range(totalPlayer):
             
             pile_card = UC.initializeCard(pile_card, unoDeck)
+        
+        gameFrame.destroy()
+        main_page_part_3()
 
 
 '''
@@ -596,7 +667,7 @@ def main_page_part_3():
         for x in range(totalPlayer):
             # Open Card Image
             #open_pic = Image.open(f'{GUI_location}{card_image_location}/uno backside.png')
-            open_pic = Image.open(f'{GUI_location}/img/Uno Card/uno backside.png')
+            open_pic = Image.open(f'{GUI_location}{card_image_location}/uno backside.png')
             # Resized the Image
             resized = open_pic.resize((54, 84), Image.ANTIALIAS)
             if x == 0:
