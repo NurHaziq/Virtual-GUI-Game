@@ -101,3 +101,52 @@ def canPlay(color, value, playerHand):
         elif color in card or value in card:
             return True
     return False
+
+
+"""
+Check card in player hand to put in pile card
+***********************************************
+Parameters      ||  currentCard --> string
+                ||  playerHand  --> list
+                ||  updated     --> integer
+                ||  pileCard    --> list
+                ||  unoDeck     --> list
+***********************************************
+Return Value    ||  updated         --> integer
+                ||  checkSplitCard  --> string
+                ||  winner          --> integer
+"""
+def checkCard(currentCard, playerHand, updated, pileCard, unoDeck):
+
+    winner = 0
+    splitCard = currentCard.split(' ', 1)
+    checkSplitCard = currentCard
+    if currentCard == 'Pass':
+        playerHand.extend(drawnCards(unoDeck, 1))
+        updated = 1
+    elif currentCard == 'Choose Card':
+        print('Are you idiot')
+    else:
+        if 'Wild' in currentCard:
+            pileCard.append(playerHand.pop(playerHand.index(currentCard)))
+            if len(playerHand) == 0:
+                winner = 1
+            else:
+                if 'Draw Four' in currentCard:
+                    updated = 2
+                else:
+                    updated = 3
+
+        elif splitCard[0] in pileCard[-1] or splitCard[1] in pileCard[-1]:
+            pileCard.append(playerHand.pop(playerHand.index(currentCard)))
+            if len(playerHand) == 0:
+                winner = 1
+            if splitCard[1] == 'Skip':
+                updated = 4
+            elif splitCard[1] == 'Reverse':
+                updated = 5
+            elif splitCard[1] == 'Draw Two':
+                updated = 6
+            else:
+                updated = 7
+    return updated, checkSplitCard, winner
