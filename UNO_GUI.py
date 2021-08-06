@@ -12,9 +12,9 @@ window.resizable(width = False, height = False)
 
 # Change it to the direction path in ur computer
 #Haziq Github file location
-#GUI_location = 'D:/UR6523011/Sem 2/VGT123 Technology System Programming II/GitHub/Virtual-GUI-Game'
+GUI_location = 'D:/UR6523011/Sem 2/VGT123 Technology System Programming II/GitHub/Virtual-GUI-Game'
 #Danish Github file location
-GUI_location = 'C:/Users/danis/OneDrive/Desktop/VGT 123/GitHub/Virtual-GUI-Game'
+#GUI_location = 'C:/Users/danis/OneDrive/Desktop/VGT 123/GitHub/Virtual-GUI-Game'
 #Aiman Github file location
 #GUI_location = 'C:/Users/user/Desktop/GitHub/Virtual-GUI-Game'
 
@@ -304,7 +304,7 @@ def playClick(buttonPlay):
 
     if lockEntry == 1:
         for player in range(totalPlayer):
-            players.append(UC.drawnCards(unoDeck, 1))
+            players.append(UC.drawnCards(unoDeck, 5))
         for x in range(totalPlayer):
             
             pile_card = UC.initializeCard(pile_card, unoDeck)
@@ -509,13 +509,13 @@ def passwordEntry(playerName, password):
     wnd.title('UNO')
     wnd.resizable(width = False, height = False)
     wnd.configure(background = 'white')
-    wnd.iconbitmap('c:/gui/UNO_icon.ico')
+    wnd.iconbitmap(f'{GUI_location}/Image/uno_icon.ico')
 
     def main_Frame():
         wnd.title('UNO')
         wnd.resizable(width = False, height = False)
         wnd.configure(background = 'white')
-        wnd.iconbitmap('c:/gui/UNO_icon.ico')
+        wnd.iconbitmap(f'{GUI_location}/Image/uno_icon.ico')
     
     def ID (event):
         global correct
@@ -576,7 +576,7 @@ def player_hand():
     playerHand = Toplevel(window)
     playerHand.title(f'In Your Hand Player {playerTurn + 1}')
     playerHand.resizable(width = False, height = False)
-    window.iconbitmap('C:/gui/UNO_icon.ico')
+    window.iconbitmap(f'{GUI_location}/Image/uno_icon.ico')
     
 
     gameFrame.destroy()
