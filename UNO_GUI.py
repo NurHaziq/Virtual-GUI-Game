@@ -356,6 +356,27 @@ def check_position():
     elif playerTurn < 0:
         playerTurn = totalPlayer - 1
 
+
+def pick_card(event):
+    global clicked, putCard, playerPassCard, players, playerTurn, colors, holdWild
+
+    def sizing_image(location):
+        # Open Card Image
+        open_pic = Image.open(f'{GUI_location}{card_image_location}/{location}.png')
+        # Resized the Image
+        resized = open_pic.resize((54, 84), Image.ANTIALIAS)
+        # Updated Card Image size
+        updated_card_pic = ImageTk.PhotoImage(resized)
+        open_pic = updated_card_pic
+        return open_pic
+
+    if clicked.get() == 'Choose Card':
+        playerPassCard = sizing_image('Pass')
+    else:
+        playerPassCard = sizing_image(clicked.get())
+    putCard['image'] = playerPassCard
+
+
 def pick_color(color):
     global clicked, pile_card, playerTurn, colorState, holdWild, currentCard, checkUpdated
 
