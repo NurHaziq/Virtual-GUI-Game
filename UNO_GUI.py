@@ -11,18 +11,18 @@ window.title('UNO')
 window.resizable(width = False, height = False)
 
 # Change it to the direction path in ur computer
-GUI_location = 'D:/UR6523011/Sem 2/VGT123 Technology System Programming II/GitHub/Virtual-GUI-Game'
-card_image_location = '/image/Uno Card'
-"""
+"""GUI_location = 'D:/UR6523011/Sem 2/VGT123 Technology System Programming II/GitHub/Virtual-GUI-Game'
+card_image_location = '/image/Uno Card'"""
+
 card_image_location = '/img/Uno Card'
 GUI_location = 'C:/Users/danis/OneDrive/Desktop/UNO_GUI'
-"""
+window.iconbitmap('C:/gui/UNO_icon.ico')
 """
 card_image_location = '/image/Uno Card'
 GUI_location = 'C:/Users/user/Desktop/GitHub/Virtual-GUI-Game'
 """
 
-window.iconbitmap(f'{GUI_location}/GUI Sketch/image/uno_icon.ico')
+#window.iconbitmap(f'{GUI_location}/GUI Sketch/image/uno_icon.ico')
 
 detailFrame1 = Label(window, bg = 'skyblue2')
 detailFrame2 = Label(window, bg = 'skyblue2')
@@ -285,6 +285,30 @@ def check_position():
     elif playerTurn < 0:
         playerTurn = totalPlayer - 1
 
+def pick_color(color):
+    global clicked, pile_card, playerTurn, colorState, holdWild, currentCard, checkUpdated
+
+    if colorState == 1:
+        currentCard = clicked.get()
+        
+        if currentCard != 'Choose Card':
+                
+            print(f'Player {playerTurn + 1} is change card color to = {currentCard}')
+
+            if checkUpdated == 3:
+                playerTurn += playerDirection
+            elif checkUpdated == 2:
+                playerTurn += playerDirection
+                check_position()
+                players[playerTurn] += UC.drawnCards(unoDeck, 4)
+                playerTurn += playerDirection
+            else:
+                playerTurn += playerDirection
+            check_position()
+            
+            colorState = 0
+            
+            jump_page()
 
 def pass_card(players):
     global clicked, pile_card, playerTurn, playerDirection, colorState, currentCard, checkUpdated, holdWild, victory
@@ -386,6 +410,57 @@ def pass_card(players):
             check_position()
             jump_page()
 
+def passwordEntry(playerName, password):
+    correct = 0
+
+    wnd = Toplevel()
+    wnd.title('UNO')
+    wnd.resizable(width = False, height = False)
+    wnd.configure(background = 'white')
+    wnd.iconbitmap('c:/gui/UNO_icon.ico')
+
+    def main_Frame():
+        wnd.title('UNO')
+        wnd.resizable(width = False, height = False)
+        wnd.configure(background = 'white')
+        wnd.iconbitmap('c:/gui/UNO_icon.ico')
+    
+    def ID (event):
+        global correct
+        def succeed():
+            player_hand()
+            wnd.destroy()
+        if entry2.get() == password:
+            correct = 1
+            succeed()
+            return correct
+        else:
+            messagebox.showerror('UNO', 'Wrong username or password')
+        
+    def exit():
+        sys.exit()
+
+    label1 = Label(wnd, text = f'Username\n{playerName}')
+    label2 = Label(wnd, text = 'Password')
+    entry2 = Entry(wnd, show = '*')
+    ext_But = Button(wnd, text = 'Cancel',command = wnd.destroy)
+
+    entry2.bind('<Return>',ID)
+
+    label1.grid(column = 2,row = 1,pady= 6, padx = 70)
+    label2.grid(column = 2, row = 3,pady= 6, padx = 70)
+    entry2.grid(column = 2, row = 4,pady= 6, padx = 70)
+    ext_But.grid(column = 2, row = 5,pady= 6, padx = 70)
+    
+def login():
+    global passwordWindow 
+    
+    msgBox = messagebox.askquestion('Player Turn', f'Are your player {playerTurn + 1}')
+    if msgBox == 'yes':
+       loginSuccess = passwordEntry(playerName[playerTurn], playerPassword[playerTurn])
+       if loginSuccess == 1:
+           gameFrame.destroy()       
+
             
 """
 Check card in player hand to put in pile card during wild card
@@ -479,7 +554,7 @@ def player_hand():
             
             setCardColumn += 1
         
-        dropDown = OptionMenu(playerHand,  clicked, *options)
+        dropDown = OptionMenu(playerHand,  clicked, *options, command = pick_card)
         dropDown.grid(row = setCardRow + 1, column = 0, columnspan = 5)
 
         putCard = Button(playerHand, image = playerPassCard, command = lambda: pass_card(players), borderwidth = 0)
