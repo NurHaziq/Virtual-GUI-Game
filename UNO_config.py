@@ -68,8 +68,10 @@ def drawnCards(unoDeck, numCards):
 
 """
 Show card in player hand
+***********************************************
 Parameter       ||  players     --> intiger
-                ||  playerHand  --> list  
+                ||  playerHand  --> list
+***********************************************
 Return value    ||  None
 """
 def showHand(player, playerHand):
@@ -81,6 +83,23 @@ def showHand(player, playerHand):
         y += 1
         print(f'{y}) {card}')
     print('')
+
+"""
+Check whether a player is able to drawn a card
+***********************************************
+Parameters      ||  color       --> string
+                ||  value       --> string
+                ||  playerHand  --> list
+***********************************************
+Return Value    ||  boolean
+"""
+def canPlay(color, value, playerHand):
+    for card in playerHand:
+        if 'Wild' in card:
+            return True
+        elif color in card or value in card:
+            return True
+    return False
 
 
 """
@@ -125,6 +144,8 @@ def checkCard(currentCard, playerHand, updated, pileCard, unoDeck):
     if currentCard == 'Pass':
         playerHand.extend(drawnCards(unoDeck, 1))
         updated = 1
+    elif currentCard == 'Choose Card':
+        print('Are you idiot')
     else:
         if 'Wild' in currentCard:
             pileCard.append(playerHand.pop(playerHand.index(currentCard)))
@@ -140,14 +161,15 @@ def checkCard(currentCard, playerHand, updated, pileCard, unoDeck):
             pileCard.append(playerHand.pop(playerHand.index(currentCard)))
             if len(playerHand) == 0:
                 winner = 1
-            if splitCard[1] == 'Skip':
-                updated = 4
-            elif splitCard[1] == 'Reverse':
-                updated = 5
-            elif splitCard[1] == 'Draw Two':
-                updated = 6
             else:
-                updated = 7
+                if splitCard[1] == 'Skip':
+                    updated = 4
+                elif splitCard[1] == 'Reverse':
+                    updated = 5
+                elif splitCard[1] == 'Draw Two':
+                    updated = 6
+                else:
+                    updated = 7
     return updated, checkSplitCard, winner
 
 
@@ -177,19 +199,22 @@ def checkColor(currentCard, playerHand, updated, pileCard, unoDeck, cardColor):
     if currentCard == 'Pass':
         playerHand.extend(drawnCards(unoDeck, 1))
         updated = 1
+    elif currentCard == 'Choose Card':
+        print('Are you idiot')
     else:
         if splitCard[0] in cardColor:
             pileCard.append(playerHand.pop(playerHand.index(currentCard)))
             if len(playerHand) == 0:
                 winner = 1
-            if splitCard[1] == 'Skip':
-                updated = 4
-            elif splitCard[1] == 'Reverse':
-                updated = 5
-            elif splitCard[1] == 'Draw Two':
-                updated = 6
             else:
-                updated = 7
+                if splitCard[1] == 'Skip':
+                    updated = 4
+                elif splitCard[1] == 'Reverse':
+                    updated = 5
+                elif splitCard[1] == 'Draw Two':
+                    updated = 6
+                else:
+                    updated = 7
                 Nabil = 0
     return updated, checkSplitCard, Nabil, winner
 

@@ -378,40 +378,65 @@ def pick_card(event):
 
 
 def pick_color(color):
-    global clicked, pile_card, playerTurn, colorState, holdWild, currentCard, checkUpdated
+    global clicked, pile_card, playerTurn, colorState, holdWild, currentCard, checkUpdated, playerDirection
 
     if colorState == 1:
         currentCard = clicked.get()
-        
-        if currentCard != 'Choose Card':
-                
-            print(f'Player {playerTurn + 1} is change card color to = {currentCard}')
 
+        print(currentCard)
+        if currentCard != 'Choose Card':
+            print(f'Player {playerTurn + 1} is change card color to = {currentCard}')
             if checkUpdated == 3:
                 playerTurn += playerDirection
+                check_position()
+                colorState = 0
             elif checkUpdated == 2:
                 playerTurn += playerDirection
                 check_position()
                 players[playerTurn] += UC.drawnCards(unoDeck, 4)
                 playerTurn += playerDirection
-            else:
+                colorState = 0
+            elif checkUpdated == 4:  
+                # Skip
+                print('Skip is selected')
                 playerTurn += playerDirection
+                check_position()
+                playerTurn += playerDirection
+            elif checkUpdated == 5:
+                # Reverse
+                print('Reverse is selected')
+                playerDirection *= -1
+                playerTurn += playerDirection
+            elif checkUpdated == 6:
+                # Draw Two
+                print('Draw Two is selected')
+                playerTurn += playerDirection
+                check_position()
+                players[playerTurn] += UC.drawnCards(unoDeck, 2)
+                playerTurn += playerDirection
+            elif checkUpdated == 7:
+                # Color or value are same
+                print('Color or value is selected')
+                playerTurn += playerDirection
+                
             check_position()
-            
-            colorState = 0
-            
+            holdWild = 1
+
+            checkUpdated = 0
             jump_page()
+
 
 def pass_card(players):
     global clicked, pile_card, playerTurn, playerDirection, colorState, currentCard, checkUpdated, holdWild, victory
 
     if holdWild == 1:
-        
+        print(currentCard)
         currentProgress =  UC.checkColor(clicked.get(), players[playerTurn], checkUpdated, pile_card, unoDeck, currentCard)
         checkUpdated = currentProgress[0]
-        #holdWild = currentProgress[2]
+        holdWild = currentProgress[2]
         victory = currentProgress[3]
 
+        print(f'Current Hold card b = {currentProgress[1]}')
         if checkUpdated != 0:
             #check_position()
             if checkUpdated == 1:
@@ -458,8 +483,9 @@ def pass_card(players):
         checkUpdated = currentProgress[0]
         victory = currentProgress[2]
 
+        print(f'Current Hold card a = {currentProgress[1]}')
         if checkUpdated != 0:
-            print("No card is selected")
+            #check_position()
             if checkUpdated == 1:
                 # Pass
                 print('Pass is selected')
@@ -467,14 +493,14 @@ def pass_card(players):
             elif checkUpdated == 2:
                 # Wild Draw Four
                 print('Wild Draw Four is selected')
-                colorState = 1
                 holdWild = 1
+                colorState = 1
                 player_hand()
             elif checkUpdated == 3:
                 # Wild
                 print('Wild is selected')
-                colorState = 1
                 holdWild = 1
+                colorState = 1
                 player_hand()
             elif checkUpdated == 4:
                 # Skip
@@ -498,7 +524,7 @@ def pass_card(players):
                 # Color or value are same
                 print('Color or value is selected')
                 playerTurn += playerDirection
-            checkUpdated = 0
+                checkUpdated = 0
             check_position()
             jump_page()
 
@@ -567,6 +593,19 @@ Return Value    ||  playerTurn      --> integer
                 ||  playerPassCard      --> string
                 ||  gameFrame           --> Label
 """
+"""
+Check card in player hand to put in pile card during wild card
+***************************************************************
+Parameters      ||  None
+***************************************************************
+Return Value    ||  playerTurn      --> integer
+                ||  playerHand      --> Label
+                ||  totalPlayer     --> integer
+                ||  players         --> list
+                ||  PlayerCurrentCard   --> string
+                ||  playerPassCard      --> string
+                ||  gameFrame           --> Label
+"""
 def player_hand():
     global  playerTurn, playerHand, totalPlayer, players, PlayerCurrentCard, playerPassCard, \
             gameFrame, clicked, putCard
@@ -575,9 +614,7 @@ def player_hand():
 
     playerHand = Toplevel(window)
     playerHand.title(f'In Your Hand Player {playerTurn + 1}')
-    playerHand.resizable(width = False, height = False)
-    window.iconbitmap(f'{GUI_location}/Image/uno_icon.ico')
-    
+    #playerHand.geometry('350x100')
 
     gameFrame.destroy()
     main_page_part_3()
@@ -616,10 +653,10 @@ def player_hand():
 
             Label(playerHand, image = PlayerCurrentCard[x]).grid(row = 1, column = x, padx = 5)
 
-        dropDown = OptionMenu(playerHand,  clicked, *options)
+        dropDown = OptionMenu(playerHand,  clicked, *options, command = pick_card)
         dropDown.grid(row = 2, column = 0, columnspan = 4)
 
-        putCard = Button(playerHand, image = playerPassCard, borderwidth = 0)
+        putCard = Button(playerHand, image = playerPassCard, command = lambda: pick_color(colors), borderwidth = 0)
         putCard.grid(row = 3, column = 0, columnspan = 4)
 
     else:
@@ -631,6 +668,8 @@ def player_hand():
 
         clicked = StringVar()
         clicked.set(options[0])
+
+        print(f'Player {playerTurn + 1} card is {players[playerTurn]}')
 
         card_pos = 0
         for x in range(len(players[playerTurn])):
