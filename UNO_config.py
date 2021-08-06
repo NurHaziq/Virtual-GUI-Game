@@ -195,3 +195,68 @@ def checkColor(currentCard, playerHand, updated, pileCard, unoDeck, cardColor):
                 updated = 7
                 Nabil = 0
     return updated, checkSplitCard, Nabil, winner
+
+
+"""
+Rechange the positon for winner according to their  total card
+***************************************************************
+Parameters      ||  playerName  --> list
+                ||  playerCard  --> list
+                ||  totalPlayer --> integer
+***************************************************************
+Return Value    ||  rechangeNamePos --> integer
+                ||  rechangeCardPos --> string
+"""
+def winningPosition(playerName, playerCard, totalPlayer):
+
+    name = playerName
+    card = playerCard
+    
+    rechangeNamePos = []
+    rechangeCardPos = []
+
+    save = 0
+    pos = 0
+
+    def rechage_the_pos(save):
+        for x in range(len(card)):
+            if save > len(card[x]):
+                save = len(card[x])
+                pos = x
+        return pos
+
+    def go_to_this():
+        for x in range(totalPlayer):
+            save = refData
+            pos = rechage_the_pos(save)
+            rechangeCardPos.append(card.pop(card.index(card[pos])))
+            rechangeNamePos.append(name.pop(name.index(name[pos])))
+            
+    for x in range(totalPlayer):
+        if save < len(card[x]):
+            save = len(card[x])
+
+    refData = save + 1
+
+    for x in range(totalPlayer):
+        print(f'Player{x + 1} Name = {name[x]}')
+        print(f'Player{x + 1} Card ={card[x]}')
+
+    print('*' * 30)
+    print('After Change the position')
+    print('*' * 30)
+
+    go_to_this()
+
+    for x in range(totalPlayer):
+        if x == 0:
+            print(f'{x + 1}st Place = {rechangeNamePos[x]}')
+        elif x == 1:
+            print(f'{x + 1}nd Place = {rechangeNamePos[x]}')
+        elif x == 2:
+            print(f'{x + 1}rd Place = {rechangeNamePos[x]}')
+        elif x == 3:
+            print(f'{x + 1}th Place = {rechangeNamePos[x]}')
+        print(f'Total Card ({len(rechangeCardPos[x])}) = {rechangeCardPos[x]}')
+    
+    return rechangeNamePos, rechangeCardPos
