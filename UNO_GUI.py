@@ -462,6 +462,7 @@ def pass_card(players):
                 print('Reverse is selected')
                 playerDirection *= -1
                 playerTurn += playerDirection
+                holdWild = 0
             elif checkUpdated == 6:
                 # Draw Two
                 print('Draw Two is selected')
@@ -469,12 +470,13 @@ def pass_card(players):
                 check_position()
                 players[playerTurn] += UC.drawnCards(unoDeck, 2)
                 playerTurn += playerDirection
+                holdWild = 0
             elif checkUpdated == 7:
                 # Color or value are same
                 print('Color or value is selected')
                 playerTurn += playerDirection
                 checkUpdated = 0
-            holdWild = 0
+                holdWild = 0
             check_position()
             jump_page()
 
